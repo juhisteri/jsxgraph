@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+</head>
+<body>
+
+<h2>Smithin kartta</h2>
+
+<p>Smithin karttaa käytetään paljon RF-tekniikassa. Lue lisää <a href="https://en.wikipedia.org/wiki/Smith_chart">https://en.wikipedia.org/wiki/Smith_chart</a></p>
+
+<script type='text/javascript' charset='UTF-8' src='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraphcore.js'></script>
+<link rel='stylesheet' type='text/css' href='https://cdn.jsdelivr.net/npm/jsxgraph/distrib/jsxgraph.css' /> </script>
+<style>
+#JSXBoard {
+		border-style:solid;	border-width:1px;
+		width:800px;	height: 400px;
+		overflow: hidden; position: relative;
+		background-color:#ffffff;
+		white-space:nowrap; text-overflow:clip;
+}
+#JSXBoard button {
+		padding:0px;margin-top:0px;background-color:;
+}
+</style>
+<div class='jxgbox' id='JSXBoard' > </div>
+<script>
+	(function(){
+		var JSXBoard_b = JXG.JSXGraph.initBoard('JSXBoard', {
+			boundingbox:[-8,8,24,-8],
+			originX:4, originY:4,
+			zoomX:1, zoomY:1,
+			keepaspectratio:false,	axis:false,
+			showCopyright:false,	showNavigation:false,
+			grid:true
+	});
+
+	/* Write your jsxgraph code here */
+
+
+o=JSXBoard_b .create('point', [0,0], {name:'', showInfoBox:false, visible:false, size:2});
+u=JSXBoard_b .create('point', [1,0], {name:'', showInfoBox:false, visible:false, size:2});
+j=JSXBoard_b .create('point', [0,1], {name:'', showInfoBox:false, visible:false, size:2});
+
+JSXBoard_b .create('circle', [[16,0],[10,0]], {strokeWidth:1, strokeColor:'black', showInfoBox:false, visible:true, size:2});
+
+
+siirto = JSXBoard_b .create('transform', [1,0,0,16,6,0,0,0,6], {type:'generic'});
+siirra = JSXBoard_b .create('transform', [16, 0], {type: 'translate'})
+alaoikea = JSXBoard_b .create('transform', [3, -3], {type: 'translate'})
+ylavasen = JSXBoard_b .create('transform', [-3, 3], {type: 'translate'})
+
+
+var lev=6; var aksp=[]; var aksq=[]; var aks=[];
+aksp[0]=JSXBoard_b .create('point', [-lev,0],{visible:false});
+aksp[1]=JSXBoard_b .create('point', [0,-lev],{visible:false});
+aksq[0]=JSXBoard_b .create('point', [lev,0],{name:'x',showInfoBox:false, highlight:false, color:'none',fixed:true});
+aksq[1]=JSXBoard_b .create('point', [0,lev],{name:'y',showInfoBox:false, highlight:false, color:'none',fixed:true});
+
+aksq[2]=JSXBoard_b .create('point', [aksq[0],siirra],{name:'x',showInfoBox:false, highlight:false, color:'none',fixed:true});
+aksq[3]=JSXBoard_b .create('point', [aksq[1],siirra],{name:'y',showInfoBox:false, highlight:false, color:'none',fixed:true});
+
+aks[0]=JSXBoard_b .create('arrow', [aksp[0],aksq[0]],{strokeWidth:2, name:'', strokeColor:'black', showInfoBox:false, visible:true, size:2, fixed:true,highlight:false});
+aks[1]=JSXBoard_b .create('arrow', [aksp[1],aksq[1]],{strokeWidth:2, name:'', strokeColor:'black', showInfoBox:false, visible:true, size:2, fixed:true,highlight:false});
+aks[2]=JSXBoard_b .create('arrow', [aks[0],siirra],{strokeWidth:2, name:'', strokeColor:'black', showInfoBox:false, visible:true, size:2, fixed:true,highlight:false});
+aks[3]=JSXBoard_b .create('arrow', [aks[1],siirra],{strokeWidth:2, name:'', strokeColor:'black', showInfoBox:false, visible:true, size:2, fixed:true,highlight:false});
+
+
+z=JSXBoard_b .create('point', [1,1], {name:'z', showInfoBox:false, visible:true, size:2});
+uperz=JSXBoard_b .create('point', [function () {return z.X()/o.Dist(z)**2;} ,function () {return -z.Y()/o.Dist(z)**2;}], {name:'', showInfoBox:false, visible:true, size:2});
+
+w=JSXBoard_b .create('point', [function () {return Tx(z.X(),z.Y());},function () {return Ty(z.X(),z.Y());}], {name:'', showInfoBox:false, visible:false, size:2});
+ww=JSXBoard_b .create('point', [function () {return Tx(uperz.X(),uperz.Y());},function () {return Ty(uperz.X(),uperz.Y());}], {name:'T(1/z)', showInfoBox:false, visible:true, size:2});
+
+
+function Tx(x,y) {
+return (x**2+y**2-1)/((x+1)**2+y**2);
+}
+function Ty(x,y) {
+return (2*y)/((x+1)**2+y**2);
+}
+
+w2=JSXBoard_b .create('point', [w,siirto], {name:'w', showInfoBox:false, visible:true, size:2});
+ww2=JSXBoard_b .create('point', [ww,siirto], {name:'w', showInfoBox:false, visible:true, size:2});
+
+
+
+zx=JSXBoard_b .create('point', [function () {return z.X();},0], {name:'', showInfoBox:false, visible:false, size:2});
+zCenter=JSXBoard_b .create('point', [function () {return z.X()/(z.X()+1);},0], {name:'', showInfoBox:false, visible:false, size:2});
+
+//zpu=JSXBoard_b .create('parallelpoint', [o,u,z]);
+//zpj=JSXBoard_b .create('parallelpoint', [o,j,z]);
+
+//JSXBoard_b .create('line', [z,zpj], {strokeWidth:1, strokeColor:'black', showInfoBox:false, visible:true, size:2});
+//JSXBoard_b .create('line', [z,zpu], {strokeWidth:1, strokeColor:'black', showInfoBox:false, visible:true, size:2});
+
+JSXBoard_b .create('curve',
+                       [function(t){ return t;},
+                        function(t){ return z.Y();},
+                        -6, 6]
+                    );
+JSXBoard_b .create('curve',
+                       [function(t){ return z.X();},
+                        function(t){ return t;},
+                        -6, 6]
+                    );
+
+ymp1=JSXBoard_b .create('circle', [[function () {return 16+6*z.X()/(1+z.X());},0],[16+6*1,0]], {strokeWidth:1, strokeColor:'black', showInfoBox:false, visible:true, size:2, strokeColor:'blue'});
+
+ymp2=JSXBoard_b .create('circle', [[16+6*1,function () {return 6*(2+z.Y())/(2*z.Y());}],[16+6*1,0]], {strokeWidth:1, strokeColor:'black', showInfoBox:false, visible:true, size:2, strokeColor:'blue'});
+
+
+for(let k=0; k<8; k++) {
+JSXBoard_b .create('circle', [[16+6*k/(k+1),0],[16+6*1,0]], {strokeWidth:1, highlight:false, strokeColor:'red', showInfoBox:false, visible:true, size:2});
+JSXBoard_b .create('circle', [[16-6*k/(k+1),0],[16-6*1,0]], {strokeWidth:1, highlight:false, strokeColor:'blue', showInfoBox:false, visible:true, size:2});
+}
+
+for(let k=1; k<5; k++) {
+JSXBoard_b .create('circle', [[16+6*1,6*1/k],[16+6*1,0]], {strokeWidth:1, highlight:false, strokeColor:'red', showInfoBox:false, visible:true, size:2});
+JSXBoard_b .create('circle', [[16+6*1,-6*1/k],[16+6*1,0]], {strokeWidth:1, highlight:false, strokeColor:'red', showInfoBox:false, visible:true, size:2});
+
+JSXBoard_b .create('circle', [[16-6*1,6*1/k],[16-6*1,0]], {strokeWidth:1, highlight:false, strokeColor:'blue', showInfoBox:false, visible:true, size:2});
+JSXBoard_b .create('circle', [[16-6*1,-6*1/k],[16-6*1,0]], {strokeWidth:1, highlight:false, strokeColor:'blue', showInfoBox:false, visible:true, size:2});
+
+}
+
+var button1 = JSXBoard_b .create('button', [-5, -1, '+i', function() {ajasta(0,1);}], {});
+var button1 = JSXBoard_b .create('button', [-5, -2, '-i', function() {ajasta(0,-1);}], {});
+var button1 = JSXBoard_b .create('button', [-5, -3, '+1', function() {ajasta(1,0);}], {});
+var button1 = JSXBoard_b .create('button', [-5, -4, '-1', function() {ajasta(-1,0);}], {});
+
+
+function ajasta(a,b) {
+z.moveTo([z.X()+a,z.Y()+b]);
+}
+
+
+	})();
+</script> 
+
+</body>
+</html>
